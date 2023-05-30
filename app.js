@@ -16,7 +16,7 @@ const url = process.env.URL;
 const got_url = "mongodb+srv://" + url + "/todolistDB";
 mongoose.connect(got_url, {
   useNewUrlParser: true,
-});
+}).then(function (doc) {});
 
 const itemsSchema = new mongoose.Schema({
   name: String,
