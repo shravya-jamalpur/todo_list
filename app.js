@@ -4,20 +4,19 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
-
+require("dotenv").config();
 const app = express();
 
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-const api_key=process.env.API_KEY;
-mongoose.connect(
-  "mongodb+srv://"+api_key+"/todolistDB",
-  {
-    useNewUrlParser: true,
-  }
-);
+const url = process.env.URL;
+
+const got_url = "mongodb+srv://" + url + "/todolistDB";
+mongoose.connect(got_url, {
+  useNewUrlParser: true,
+});
 
 const itemsSchema = new mongoose.Schema({
   name: String,
@@ -101,8 +100,7 @@ app.post("/", function (req, res) {
   } else {
     List.findOne({ name: listName }).then(function (foundList) {
       foundList.items.push(item);
-      foundList.save()
-      .then(function () {
+      foundList.save().then(function () {
         res.redirect("/" + listName);
       });
     });
@@ -137,6 +135,6 @@ app.get("/about", function (req, res) {
   res.render("about");
 });
 
-app.listen(process.env.PORT||3000, function () {
+app.listen(process.env.PORT || 3000, function () {
   console.log("Server started on port 3000");
 });
